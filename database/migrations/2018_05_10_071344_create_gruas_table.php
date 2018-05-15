@@ -21,7 +21,6 @@ class CreateGruasTable extends Migration
             $table->string('modelo');
 
             $table->string('id_empresa')->unsigned();
-            $table->string('id_empresa')->references('id')->on('empresas');
             $table->softDeletes();
 
             $table->timestamps();
