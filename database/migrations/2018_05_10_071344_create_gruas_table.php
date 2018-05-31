@@ -20,10 +20,9 @@ class CreateGruasTable extends Migration
             $table->string('marca');
             $table->string('modelo');
 
-            $table->string('id_empresa')->unsigned();
-            $table->softDeletes();
-
+            $table->unsignedInteger('id_empresa');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

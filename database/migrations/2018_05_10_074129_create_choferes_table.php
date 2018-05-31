@@ -16,10 +16,8 @@ class CreateChoferesTable extends Migration
         Schema::create('choferes', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('id_empresa')->unsigned();
-            $table->integer('id_empresa')->references('id')->on('empresas');
-
-            $table->integer('id_user')->unsigned();
+            $table->unsignedInteger('id_empresa');
+            $table->unsignedInteger('id_user');
 
 
             $table->timestamps();

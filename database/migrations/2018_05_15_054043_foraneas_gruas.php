@@ -13,8 +13,8 @@ class ForaneasGruas extends Migration
      */
     public function up()
     {
-        Schema::create('gruas', function (Blueprint $table) {
-            $table->string('id_empresa')->references('id')->on('empresas');
+        Schema::table('gruas', function (Blueprint $table) {
+            $table->foreign('id_empresa')->references('id')->on('empresas');
         });
     }
 

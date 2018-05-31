@@ -13,8 +13,9 @@ class ForaneasChoferes extends Migration
      */
     public function up()
     {
-        Schema::create('choferes', function (Blueprint $table) {
-            $table->integer('id_user')->references('id')->on('users');
+        Schema::table('choferes', function (Blueprint $table) {
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_empresa')->references('id')->on('empresas');
         });
     }
 

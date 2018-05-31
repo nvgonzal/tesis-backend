@@ -13,8 +13,8 @@ class ForaneasClientes extends Migration
      */
     public function up()
     {
-        Schema::create('clientes', function (Blueprint $table) {
-            $table->integer('id_user')->references('id')->on('users');
+        Schema::table('clientes', function (Blueprint $table) {
+            $table->foreign('id_user')->references('id')->on('users');
         });
     }
 
