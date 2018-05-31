@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('empresas','EmpresasController');
+Route::apiResource('gruas','GruasController');
+
+//Route::put('empresas/{id}','EmpresasController@edit');
+

@@ -18,7 +18,6 @@ class CreateClientesTable extends Migration
             $table->string('cuenta_pagos');
 
             $table->integer('id_user')->unsigned();
-            $table->integer('id_user')->references('id')->on('users');
 
             $table->timestamps();
         });

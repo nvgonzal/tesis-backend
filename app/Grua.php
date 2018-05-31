@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Grua extends Model
 {
 
-    protected $table = "grua";
-
     protected $fillable = [
         'patente',
         'tipo',
