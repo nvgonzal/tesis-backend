@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Choferes extends Model
+class Chofer extends Model
 {
 
     protected $fillable = [
