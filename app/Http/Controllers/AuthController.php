@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RegisterConfirmation;
 use Illuminate\Http\Request;
-use Hash, Validator;
+use Hash, Validator, Mail;
 use App\User;
 
 class AuthController extends Controller
@@ -13,8 +14,14 @@ class AuthController extends Controller
             , 'ap_materno','telefono_fijo','rut', 'celular');
 
         $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users'
+            'nombre'          => 'required|max:255',
+            'email'         => 'required|email|max:255|unique:users',
+            'password'      => 'required|min:6',
+            'ap_paterno'    => 'required',
+            'ap_materno'    => 'required',
+            'telefono_fijo' => 'required',
+            'celular'       => 'required|min:8',
+            'rut'           => 'required|cl_rut',
         ];
         $validator = Validator::make($credentials, $rules);
         if($validator->fails()) {
@@ -30,9 +37,12 @@ class AuthController extends Controller
         $user->telefono_fijo = $request->telefono_fijo;
         $user->rut = $request->rut;
         $user->email = $request->email;
+        $user->tipo_usuario = 'cliente';
         $user->password = Hash::make($request->password);
 
         $user->save();
+
+        Mail::to($user->email)->send(new RegisterConfirmation($user));
 
         return response()->json(['message'=>'El usuario ha sido creado. Recibiras un correo de confirmacion.']);
     }
