@@ -14,4 +14,12 @@ class Empresa extends Model
         'direccion',
         'cuenta_pago'
     ];
+
+    public function servicios(){
+        return $this->hasMany('App\Servicio');
+    }
+
+    public function gruas(){
+        return $this->hasMany('App\Grua');
+    }
 }

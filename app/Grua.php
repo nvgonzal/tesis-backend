@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Grua extends Model
 {
-
     protected $fillable = [
         'patente',
         'tipo',
@@ -14,4 +13,12 @@ class Grua extends Model
         'modelo',
         'id_empresa'
     ];
+
+    public function servicios(){
+        return $this->hasMany('App\Servicio');
+    }
+
+    public function empresa(){
+        return $this->belongsTo('App\Empresa');
+    }
 }
