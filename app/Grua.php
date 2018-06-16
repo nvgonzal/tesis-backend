@@ -15,10 +15,10 @@ class Grua extends Model
     ];
 
     public function servicios(){
-        return $this->hasMany('App\Servicio');
+        return $this->hasMany('App\Servicio','id_grua');
     }
 
     public function empresa(){
-        return $this->belongsTo('App\Empresa');
+        return $this->belongsTo('App\Empresa','id_empresa');
     }
 }

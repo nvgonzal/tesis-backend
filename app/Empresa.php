@@ -16,10 +16,10 @@ class Empresa extends Model
     ];
 
     public function servicios(){
-        return $this->hasMany('App\Servicio');
+        return $this->hasMany('App\Servicio','id_empresa');
     }
 
     public function gruas(){
-        return $this->hasMany('App\Grua');
+        return $this->hasMany('App\Grua','id_empresa');
     }
 }
