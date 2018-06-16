@@ -15,10 +15,10 @@ class CreateServiciosTable extends Migration
     {
         Schema::create('servicios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_empresa')->unsigned();
-            $table->integer('id_chofer')->unsigned();
-            $table->integer('id_cliente')->unsigned();
-            $table->integer('id_grua')->unsigned();
+            $table->unsignedInteger('id_empresa');
+            $table->unsignedInteger('id_chofer');
+            $table->unsignedInteger('id_cliente');
+            $table->unsignedInteger('id_grua');
             $table->boolean('alta_gama');
             $table->string('patente_vehiculo');
             $table->string('marca');

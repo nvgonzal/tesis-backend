@@ -28,6 +28,11 @@ class ForaneasServicios extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('servicios',function (Blueprint $table){
+            $table->dropForeign(['id_empresa']);
+            $table->dropForeign(['id_chofer']);
+            $table->dropForeign(['id_cliente']);
+            $table->dropForeign(['id_grua']);
+        });
     }
 }

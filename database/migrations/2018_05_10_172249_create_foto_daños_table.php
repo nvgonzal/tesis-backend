@@ -19,6 +19,7 @@ class CreateFotoDañosTable extends Migration
             $table->text('descripcion');
             $table->integer('id_servicio')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -25,6 +25,8 @@ class ForaneasFotoDaño extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('foto_daños',function (Blueprint $table){
+            $table->dropForeign(['id_servicio']);
+        });
     }
 }
