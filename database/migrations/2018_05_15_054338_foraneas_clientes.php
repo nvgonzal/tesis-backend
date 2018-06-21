@@ -25,6 +25,8 @@ class ForaneasClientes extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clientes');
+        Schema::table('clientes',function (Blueprint $table){
+            $table->dropForeign(['id_user']);
+        });
     }
 }

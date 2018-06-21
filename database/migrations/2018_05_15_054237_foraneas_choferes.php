@@ -26,6 +26,9 @@ class ForaneasChoferes extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('choferes');
+        Schema::table('choferes',function (Blueprint $table){
+            $table->dropForeign(['id_empresa']);
+            $table->dropForeign(['id_user']);
+        });
     }
 }

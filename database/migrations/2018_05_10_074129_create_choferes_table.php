@@ -20,7 +20,9 @@ class CreateChoferesTable extends Migration
             $table->unsignedInteger('id_user');
 
 
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

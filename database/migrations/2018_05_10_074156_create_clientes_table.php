@@ -15,11 +15,12 @@ class CreateClientesTable extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('cuenta_pagos');
+            $table->string('cuenta_pagos')->nullable();
 
             $table->integer('id_user')->unsigned();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
