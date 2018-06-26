@@ -32,7 +32,8 @@ class AuthController extends Controller
      * @param Request $request
      * @param $tipo_usuario
      * @param string $random_password
-     * @return User|\Illuminate\Http\JsonResponse
+     * @return User
+     * @throws ValidationException cuando existen errores de validacion en los campos de request
      */
     public static function createUser(Request $request, $tipo_usuario,$random_password = ""){
 
