@@ -23,4 +23,8 @@ class Chofer extends Model
     public function servicios(){
         return $this->hasMany('App\Servicio','id_chofer');
     }
+
+    public function empresa(){
+        return $this->belongsTo('App\Empresa','id_empresa');
+    }
 }

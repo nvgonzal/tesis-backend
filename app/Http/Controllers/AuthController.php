@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function register(Request $request){
 
-        $user = $this->createUser($request,'cliente');
+        $user = AuthController::createUser($request,'cliente');
 
         $client = new Cliente();
         $client->id_user = $user->id;
@@ -23,7 +23,13 @@ class AuthController extends Controller
         return response()->json(['message'=>'El usuario ha sido creado. Recibiras un correo de confirmacion.']);
     }
 
-    public static function createUser(Request $request, $tipo_usuario,$random_password = ''){
+    /**
+     * @param Request $request
+     * @param $tipo_usuario
+     * @param string $random_password
+     * @return User|\Illuminate\Http\JsonResponse
+     */
+    public static function createUser(Request $request, $tipo_usuario,$random_password = ""){
 
         $keys = collect(['nombre', 'email', 'password', 'ap_paterno'
             ,'ap_materno','telefono_fijo','rut', 'celular']);
@@ -37,9 +43,10 @@ class AuthController extends Controller
             'telefono_fijo' => 'required',
             'celular'       => 'required|min:8',
             'rut'           => 'required|cl_rut',
+
         ]);
 
-        if (isset($random_password)){
+        if (!empty($random_password)){
             $keys->except('password');
             $rules->except('password');
         }
@@ -52,17 +59,17 @@ class AuthController extends Controller
         }
 
         $user = new User();
-        $user->nombre = $request->nombre;
-        $user->ap_paterno = $request->ap_paterno;
-        $user->ap_materno = $request->ap_materno;
-        $user->nombre_completo = $request->nombre .' '. $request->ap_paterno .' '. $request->ap_materno;
-        $user->celular = $request->celular;
-        $user->telefono_fijo = $request->telefono_fijo;
-        $user->rut = $request->rut;
-        $user->email = $request->email;
-        $user->tipo_usuario = $tipo_usuario;
+        $user->nombre           = $request->nombre;
+        $user->ap_paterno       = $request->ap_paterno;
+        $user->ap_materno       = $request->ap_materno;
+        $user->nombre_completo  = $request->nombre .' '. $request->ap_paterno .' '. $request->ap_materno;
+        $user->celular          = $request->celular;
+        $user->telefono_fijo    = $request->telefono_fijo;
+        $user->rut              = $request->rut;
+        $user->email            = $request->email;
+        $user->tipo_usuario     = $tipo_usuario;
 
-        if (isset($random_password)){
+        if (!empty($random_password)){
             $user->password = Hash::make($random_password);
         }
         else {
