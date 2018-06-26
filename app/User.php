@@ -26,7 +26,6 @@ class User extends Authenticatable
         'tipo_usuario',
         'rut',
         'email',
-        'password'
     ];
 
     /**

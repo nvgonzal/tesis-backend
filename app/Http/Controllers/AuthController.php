@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Mail\RegisterConfirmation;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Hash, Validator, Mail;
 use App\User;
@@ -12,7 +13,11 @@ class AuthController extends Controller
 {
     public function register(Request $request){
 
-        $user = AuthController::createUser($request,'cliente');
+        try {
+            $user = AuthController::createUser($request, 'cliente');
+        } catch (ValidationException $e) {
+            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages()]);
+        }
 
         $client = new Cliente();
         $client->id_user = $user->id;
@@ -55,7 +60,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($data, $rules->toArray());
         if($validator->fails()) {
-            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $validator->messages()]);
+            throw new ValidationException($validator);
         }
 
         $user = new User();

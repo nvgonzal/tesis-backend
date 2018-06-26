@@ -9,6 +9,8 @@ class Cliente extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'clientes';
+
     protected $fillable = [
         'cuenta_pagos',
         'id_user'
