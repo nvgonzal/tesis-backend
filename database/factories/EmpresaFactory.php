@@ -1,9 +1,10 @@
 <?php
 
-use Faker\Generator as Faker;
+use Faker\Factory as Faker;
 use \Freshwork\ChileanBundle\Rut;
 
-$factory->define(App\Empresa::class, function (Faker $faker) {
+$factory->define(App\Empresa::class, function () {
+    $faker = Faker::create('es_ES');
     $nombreEmpresa = $faker->company;
     return [
         'nombre'        => $nombreEmpresa,

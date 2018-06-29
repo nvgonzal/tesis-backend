@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e7b51380998a502332473b2e1805168",
+    "content-hash": "22b54e26228c7c69bb8c7fcd11e6e66c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3542,6 +3542,47 @@
                 "test"
             ],
             "time": "2016-01-20T08:20:44+00:00"
+        },
+        {
+            "name": "iamraccoon/car-faker",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iamraccoon/car-faker.git",
+                "reference": "00ce8a71c77ff4b8e5c253077b29a6b353b8ed0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iamraccoon/car-faker/zipball/00ce8a71c77ff4b8e5c253077b29a6b353b8ed0b",
+                "reference": "00ce8a71c77ff4b8e5c253077b29a6b353b8ed0b",
+                "shasum": ""
+            },
+            "require": {
+                "fzaninotto/faker": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "carfaker\\": "src/carfaker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "I am raccoon"
+                }
+            ],
+            "description": "Car-Faker is a PHP library that generates fake-car data for you.",
+            "keywords": [
+                "car-faker",
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2017-10-09T18:33:04+00:00"
         },
         {
             "name": "mockery/mockery",

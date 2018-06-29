@@ -25,7 +25,7 @@ class ForaneasGruas extends Migration
      */
     public function down()
     {
-        Schema::table('empresa',function (Blueprint $table){
+        Schema::table('empresas',function (Blueprint $table){
             $table->dropForeign(['id_empresa']);
         });
     }
