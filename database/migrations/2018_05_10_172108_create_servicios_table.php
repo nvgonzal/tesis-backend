@@ -15,10 +15,10 @@ class CreateServiciosTable extends Migration
     {
         Schema::create('servicios', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('id_empresa');
-            $table->unsignedInteger('id_chofer');
+            $table->unsignedInteger('id_empresa')->nullable();
+            $table->unsignedInteger('id_chofer')->nullable();
             $table->unsignedInteger('id_cliente');
-            $table->unsignedInteger('id_grua');
+            $table->unsignedInteger('id_grua')->nullable();
             $table->boolean('alta_gama');
             $table->string('patente_vehiculo');
             $table->string('marca');
@@ -26,7 +26,8 @@ class CreateServiciosTable extends Migration
             $table->string('color');
             $table->string('ubicacion');
             $table->string('destino');
-            $table->integer('precio_final');
+            $table->integer('precio_final')->nullable();
+            $table->enum('estado',['creado','tomado','pagado','finalizado'])->default('creado');
             $table->timestamps();
             $table->softDeletes();
         });

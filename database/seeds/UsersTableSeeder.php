@@ -89,7 +89,7 @@ class UsersTableSeeder extends Seeder
             'nombre_completo' => $faker->name,
             'celular'       => $faker->phoneNumber,
             'telefono_fijo' => $faker->phoneNumber,
-            'tipo_usuario'  => 'dueño',
+            'tipo_usuario'  => 'chofer',
             'rut'           => Rut::set($faker->numberBetween(10000000,20000000))->fix()->format(),
             'email'         => 'piloto@tesis.test',
             'password'      => bcrypt('123456'),
