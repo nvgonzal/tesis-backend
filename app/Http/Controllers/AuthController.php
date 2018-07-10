@@ -11,12 +11,16 @@ use App\User;
 
 class AuthController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request){
 
         try {
             $user = AuthController::createUser($request, 'cliente');
         } catch (ValidationException $e) {
-            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages()]);
+            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages()],400);
         }
 
         $client = new Cliente();
@@ -26,6 +30,21 @@ class AuthController extends Controller
         Mail::to($user->email)->send(new RegisterConfirmation($user));
 
         return response()->json(['message'=>'El usuario ha sido creado. Recibiras un correo de confirmacion.']);
+    }
+
+    public function login(Request $request){
+        $data = $request->only(['email','password']);
+        $rules = [
+            'email'     => 'required',
+            'password'  => 'required',
+        ];
+
+        $validator = Validator::make($data,$rules);
+        if ($validator->fails()){
+            return response()->json(['message'=>'Hay errores en los campos del formulario','error'=>$validator->messages()]);
+        }
+        $data = LoginProxy::attemptLogin($data['email'],$data['password']);
+        return response()->json($data);
     }
 
     /**

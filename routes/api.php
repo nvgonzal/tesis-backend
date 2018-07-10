@@ -14,10 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::post('/register','AuthController@register');
+Route::post('/login','AuthController@login');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 
 
@@ -26,5 +24,26 @@ Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
 
 Route::apiResource('gruas','GruasController');
 
-//Route::put('empresas/{id}','EmpresasController@edit');
 
+Route::middleware(['auth:api','dueno'])->group(function (){
+
+    //Rutas de registro de piloto
+    Route::get('/choferes','ChoferController@index');
+    Route::post('/choferes','ChoferController@createChofer');
+    Route::delete('/choferes/{id}','ChoferController@delete');
+
+    //Rutas de servicio
+    Route::get('/servicios','RequestServiceController@indexRequestedServices');
+});
+
+Route::middleware(['auth:api','cliente'])->group(function (){
+    Route::post('/servicio','RequestServiceController@registerService');
+});
+
+Route::middleware(['auth:api','admin'])->group(function (){
+
+});
+
+Route::middleware(['auth:api','piloto'])->group(function (){
+
+});

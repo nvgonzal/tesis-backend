@@ -28,4 +28,8 @@ class Servicio extends Model
     public function fotos_daños(){
         return $this->hasMany('App\FotoDaño','id_servicio');
     }
+
+    public function vehiculo(){
+        return $this->belongsTo('App\Vehiculo','id_vehiculo');
+    }
 }
