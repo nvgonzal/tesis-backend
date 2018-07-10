@@ -19,11 +19,8 @@ class CreateServiciosTable extends Migration
             $table->unsignedInteger('id_chofer')->nullable();
             $table->unsignedInteger('id_cliente');
             $table->unsignedInteger('id_grua')->nullable();
-            $table->boolean('alta_gama');
-            $table->string('patente_vehiculo');
-            $table->string('marca');
-            $table->string('modelo');
-            $table->string('color');
+            $table->unsignedInteger('id_vehiculo');
+            $table->boolean('alta_gama')->nullable();
             $table->string('ubicacion');
             $table->string('destino');
             $table->integer('precio_final')->nullable();
