@@ -14,7 +14,9 @@ class Empresa extends Model
         'razon_social',
         'rut',
         'direccion',
-        'cuenta_pago'
+        'cuenta_pago',
+        'latitud',
+        'longitud'
     ];
 
     public function servicios(){

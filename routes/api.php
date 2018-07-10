@@ -19,7 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('empresas','EmpresasController');
+
+
+Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
+
+
 Route::apiResource('gruas','GruasController');
 
 //Route::put('empresas/{id}','EmpresasController@edit');
