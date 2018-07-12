@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Mail\userEmpresaCreate;
 
 class EmpresasController extends Controller
 {
@@ -28,6 +31,10 @@ class EmpresasController extends Controller
      */
     public function store(Request $request)
     {
+
+            $random_pass = str_random(8);
+            $usuario = AuthController::createUser($request,'dueño', $random_pass);
+
         try{
             $empresa = new Empresa();
             $empresa->nombre = $request->nombre;
@@ -38,8 +45,9 @@ class EmpresasController extends Controller
             $empresa->save();
 
             $mensaje = ['message' => 'Empresa' . $empresa->nombre.' creado', 'data' => $empresa];
-            return response()->json($mensaje, 201);
+            mail::to($usuario->email)->send(new userEmpresaCreate($usuario,$random_pass));
 
+            return response()->json($mensaje, 201);
 
         }
         catch (Exception $e){
@@ -89,21 +97,19 @@ class EmpresasController extends Controller
     {
         try{
 
-
             $empresa = Empresa::findOrFail($id);
             $empresa->nombre = $request->input('nombre');
             $empresa->razon_social = $request->razon_social;
             $empresa->rut = $request->rut;
             $empresa->direccion = $request->direccion;
             $empresa->cuenta_pago = $request->cuenta_pago;
-
             $empresa->save();
 
             $message = ['message' => 'Empresa' . $empresa->nombre . ' actualizado','data'=> $empresa ];
 
             return response()->json($message,201);
         }catch (Exception $e){
-            $mensaje = ['mensaje' => 'Error al actualizar objeto'];
+            $mensaje = ['mensaje' => 'Error al actualizar empresa'];
             return response()->json($mensaje,500);
         }
 

@@ -17,7 +17,11 @@ Route::post('/register','AuthController@register');
 Route::post('/login','AuthController@login');
 
 
-Route::apiResource('empresas','EmpresasController');
+
+
+Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
+
+
 Route::apiResource('gruas','GruasController');
 
 
