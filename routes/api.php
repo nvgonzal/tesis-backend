@@ -24,6 +24,8 @@ Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
 
 Route::apiResource('gruas','GruasController');
 
+Route::apiResource('search','BuscarGruaController');
+
 
 Route::middleware(['auth:api','dueno'])->group(function (){
 
