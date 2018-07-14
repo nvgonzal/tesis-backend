@@ -22,7 +22,7 @@ class BuscarGruaController extends Controller
 
         $latitud = -36.827348;
         $longitud = -73.050255;
-        $radius = 5;
+        $radius = 1;
         $listaEmpresas = array();
 
 
@@ -116,24 +116,24 @@ class BuscarGruaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function harvesine (Request $request ,$latitud, $longitud)
+    public function harvesine (Request $request)
     {
 
         $user = User::findOrFail($request->user()->id);
 
         //$latitud = -36.827348;
         //$longitud = -73.050255;
-        $x = $latitud;
-        $y = $longitud;
-        $radius = 5;
 
+        $latitud = $request->latitud;
+        $longitud = $request->longitud;
+        $radius = 10;
 
         $empresa = Empresa::select('*')->selectRaw('( 6371 * acos( cos( radians(?) ) *
                                cos( radians( latitud) )
                                * cos( radians( longitud) - radians(?)
                                ) + sin( radians(?) ) *
                                sin( radians( latitud ) ) )
-                             ) AS distance', [$x, $y, $x])
+                             ) AS distance', [$latitud, $longitud, $latitud])
             ->havingRaw("distance < ?", [$radius])
             ->get();
 
