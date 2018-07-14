@@ -12,7 +12,7 @@ $factory->define(App\Empresa::class, function () {
         'rut'           => Rut::set($faker->numberBetween(40000000,70000000))->fix()->format(),
         'direccion'     => $faker->address,
         'cuenta_pago'   => $faker->creditCardNumber,
-        'latitud'       => $faker->unique()->randomFloat(6,-36.781028,-36.786115),
-        'longitud'      => $faker->unique()->randomFloat(6,-73.036772,-73.074881)
+        'latitud'       => $faker->latitude(-36.781028,-36.786115),
+        'longitud'      => $faker->longitude(-73.036772,-73.074881),
     ];
 });
