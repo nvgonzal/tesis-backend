@@ -25,6 +25,8 @@ Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
 Route::apiResource('gruas','GruasController');
 
 
+
+
 Route::middleware(['auth:api','dueno'])->group(function (){
 
     //Rutas de registro de piloto
@@ -38,6 +40,7 @@ Route::middleware(['auth:api','dueno'])->group(function (){
 
 Route::middleware(['auth:api','cliente'])->group(function (){
     Route::post('/servicio','RequestServiceController@registerService');
+    Route::post('buscar','BuscarGruaController@harvesine');
 });
 
 Route::middleware(['auth:api','admin'])->group(function (){
