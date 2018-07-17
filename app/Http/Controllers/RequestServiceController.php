@@ -68,7 +68,14 @@ class RequestServiceController extends Controller
         $servicio->save();
     }
 
-    public function makePay(){
+    public function makePay(Request $request){
+
+        //@TODO Solo para pruebas.
+        $data = $request->only(['monto','emailEmpresa']);
+
+        $payController = new PaypalPaymentsController();
+
+        $payController->payService($data['monto'],$data['emailEmpresa']);
 
     }
 }

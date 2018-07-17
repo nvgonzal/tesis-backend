@@ -9,15 +9,19 @@ use PayPal\Api\ItemList;
 use PayPal\Api\Payee;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
+use PayPal\Api\PaymentExecution;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use Illuminate\Http\Request;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Exception\PayPalConnectionException;
 use PayPal\Rest\ApiContext;
-use Config;
+
+use URL;
 
 class PaypalPaymentsController extends Controller
 {
-    /*
+
     private $_api_context;
 
     public function __construct()
@@ -30,7 +34,7 @@ class PaypalPaymentsController extends Controller
         $this->_api_context->setConfig($paypal_conf['settings']);
 
     }
-    */
+
 
     public function payService($monto,$emailEmpresa){
 
@@ -59,6 +63,37 @@ class PaypalPaymentsController extends Controller
             ->setDescription('Pago para servicio de grua')
             ->setInvoiceNumber(uniqid());
 
-        $baseUrl = env('APP_URL');
+        $redirectUrl = new RedirectUrls();
+        $redirectUrl->setReturnUrl(URL::to('/pago/aprovado'))
+            ->setCancelUrl(URL::to('/pago/cancelado'));
+
+
+        $payment = new Payment();
+        $payment->setIntent('sale')
+            ->setPayee($payee)
+            ->setRedirectUrls($redirectUrl)
+            ->setTransactions([$transaction]);
+
+        try{
+            $payment->create($this->_api_context);
+        }
+        catch (PayPalConnectionException $e){
+
+        }
+    }
+
+    public function approved(Request $request){
+
+        $paymentId = $request['paymentId'];
+
+        $payment = Payment::get($paymentId,$this->_api_context);
+
+        $execution = new PaymentExecution();
+        $execution->setPayerId($request['PayerID']);
+
+        $result = $payment->execute($execution,$this->_api_context);
+
+
+
     }
 }
