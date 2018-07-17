@@ -11,6 +11,8 @@ $factory->define(App\Empresa::class, function () {
         'razon_social'  => $nombreEmpresa,
         'rut'           => Rut::set($faker->numberBetween(40000000,70000000))->fix()->format(),
         'direccion'     => $faker->address,
-        'cuenta_pago'   => $faker->creditCardNumber
+        'cuenta_pago'   => $faker->creditCardNumber,
+        'latitud'       => $faker->latitude(-36.781028,-36.786115),
+        'longitud'      => $faker->longitude(-73.036772,-73.074881),
     ];
 });
