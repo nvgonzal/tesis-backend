@@ -20,6 +20,8 @@ class CreateEmpresasTable extends Migration
             $table->string('rut');
             $table->string('direccion');
             $table->string('cuenta_pago');
+            $table->decimal('latitud');
+            $table->decimal('longitud');
             $table->timestamps();
             $table->softDeletes();
         });

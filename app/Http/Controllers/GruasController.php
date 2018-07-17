@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Grua;
+use Auth;
 use Illuminate\Http\Request;
+use App\User;
+use App\Empresa;
+use App\Chofer;
+
 
 class GruasController extends Controller
 {
@@ -12,10 +17,11 @@ class GruasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $grua = Grua::all();
-        return response()->json($grua,200);
+        $user = User::findOrFail($request->user()->id);
+        $grua = Grua::where('id_empresa',$user->chofer->empresa->id);
+        return response()->json($grua);
     }
 
 
@@ -28,6 +34,7 @@ class GruasController extends Controller
      */
     public function store(Request $request)
     {
+
         try{
             $grua = new Grua();
             $grua->patente = $request->patente;
@@ -35,7 +42,6 @@ class GruasController extends Controller
             $grua->marca = $request->marca;
             $grua->modelo = $request->modelo;
             $grua->id_empresa = $request->id_empresa;
-
             $grua->save();
 
             $mensaje = ['message' => 'Grua' . $grua->modelo.' creada', 'data' => $grua];
@@ -75,7 +81,7 @@ class GruasController extends Controller
     {
         try{
 
-            $grua = Grua::find($id);
+            $grua = Grua::findOrFail($id);
             $grua->patente = $request->patente;
             $grua->tipo = $request->tipo;
             $grua->marca = $request->marca;
@@ -87,7 +93,8 @@ class GruasController extends Controller
             return response()->json($mensaje, 201);
 
         }catch (Exception $e){
-            return response()->json(['error' => ['message' => 'error al actualizar']], 500);
+            $mensaje = ['mensaje' => 'Error al actualizar grua'];
+            return response()->json($mensaje,500);
         }
     }
 
@@ -99,7 +106,7 @@ class GruasController extends Controller
      */
     public function destroy($id)
     {
-        $grua = Grua::find($id);
+        $grua = Grua::findOrFail($id);
         $grua->delete();
         $mensaje = ['message' => 'Grua Patente' . $grua->patente . ' ha sido Eliminada', 'data' => $grua];
         return response()->json($mensaje,201);
