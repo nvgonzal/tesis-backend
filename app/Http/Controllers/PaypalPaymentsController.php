@@ -12,26 +12,28 @@ use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
-use Illuminate\Http\Request;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Exception\PayPalConnectionException;
 use PayPal\Rest\ApiContext;
+
+use Illuminate\Http\Request;
 
 use URL;
 
 class PaypalPaymentsController extends Controller
 {
 
-    private $_api_context;
+    private $apiContext;
 
     public function __construct()
     {
-        $paypal_conf = \Config::get('paypal');
-        $this->_api_context = new ApiContext(new OAuthTokenCredential(
-                $paypal_conf['client_id'],
-                $paypal_conf['secret'])
+        $paypal_client_id = config('paypal.client_id');
+        $paypal_secret = config('paypal.secret');
+        $this->apiContext = new ApiContext(new OAuthTokenCredential(
+                $paypal_client_id,
+                $paypal_secret)
         );
-        $this->_api_context->setConfig($paypal_conf['settings']);
+        $this->apiContext->setConfig(config('paypal.settings'));
 
     }
 
@@ -41,6 +43,7 @@ class PaypalPaymentsController extends Controller
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
 
+        /*
         $item = new Item();
         $item->setName('Servicio de grua')
             ->setCurrency('USD')
@@ -48,7 +51,7 @@ class PaypalPaymentsController extends Controller
             ->setPrice($monto);
 
         $itemList = new ItemList();
-        $itemList->setItems(array($item));
+        $itemList->setItems(array($item));*/
 
         $amount = new Amount();
         $amount->setCurrency('USD')
@@ -60,8 +63,7 @@ class PaypalPaymentsController extends Controller
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setPayee($payee)
-            ->setDescription('Pago para servicio de grua')
-            ->setInvoiceNumber(uniqid());
+            ->setDescription("Pago para servicio de grua");
 
         $redirectUrl = new RedirectUrls();
         $redirectUrl->setReturnUrl(URL::to('/pago/aprovado'))
@@ -70,30 +72,39 @@ class PaypalPaymentsController extends Controller
 
         $payment = new Payment();
         $payment->setIntent('sale')
-            ->setPayee($payee)
+            ->setPayer($payer)
             ->setRedirectUrls($redirectUrl)
             ->setTransactions([$transaction]);
 
         try{
-            $payment->create($this->_api_context);
+            $payment->create($this->apiContext);
         }
         catch (PayPalConnectionException $e){
 
+            return ['success'=>'false','message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>'500'];
         }
+        $aprovalLink = $payment->getApprovalLink();
+
+        return ['success'=>'true','message'=>'Creado pago con PayPal. Usa el link para continuar con el pago','link'=>$aprovalLink,'status'=>'200'];
     }
 
     public function approved(Request $request){
 
         $paymentId = $request['paymentId'];
 
-        $payment = Payment::get($paymentId,$this->_api_context);
+        $payment = Payment::get($paymentId,$this->apiContext);
 
         $execution = new PaymentExecution();
         $execution->setPayerId($request['PayerID']);
 
-        $result = $payment->execute($execution,$this->_api_context);
+        $result = $payment->execute($execution, $this->apiContext);
 
 
+        if ($result->getState() == 'approved'){
+            return view('paypal_payment.approved',compact('result',$result));
+        }
+
+        return view('paypal_payment.failed',$result);
 
     }
 }

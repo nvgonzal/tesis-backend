@@ -75,7 +75,8 @@ class RequestServiceController extends Controller
 
         $payController = new PaypalPaymentsController();
 
-        $payController->payService($data['monto'],$data['emailEmpresa']);
+        $response = $payController->payService($data['monto'],$data['emailEmpresa']);
 
+        return response()->json($response,$response['status']);
     }
 }

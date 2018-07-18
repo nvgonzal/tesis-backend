@@ -29,10 +29,10 @@ class AddColumnsDescripcionServicio extends Migration
     public function down()
     {
         Schema::table('servicios', function (Blueprint $table) {
-            $table->dropForeign('descripcion');
-            $table->dropForeign('descripcion_chofer');
-            $table->dropForeign('evaluacion_cliente');
-            $table->dropForeign('evaluacion_empresa');
+            $table->dropColumn('descripcion');
+            $table->dropColumn('descripcion_chofer');
+            $table->dropColumn('evaluacion_cliente');
+            $table->dropColumn('evaluacion_empresa');
         });
     }
 }

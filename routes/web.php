@@ -16,4 +16,4 @@ Route::get('/', function () {
 });
 
 Route::get('/pago/aprovado','PaypalPaymentsController@approved');
-Route::get('/pago/cancelado','');
+//Route::get('/pago/cancelado','');
