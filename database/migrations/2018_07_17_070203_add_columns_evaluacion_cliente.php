@@ -26,7 +26,7 @@ class AddColumnsEvaluacionCliente extends Migration
     public function down()
     {
         Schema::table('clientes', function (Blueprint $table) {
-            //
+            $table->dropColumn('valoracion');
         });
     }
 }
