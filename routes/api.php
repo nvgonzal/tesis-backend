@@ -24,7 +24,8 @@ Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
 
 Route::apiResource('gruas','GruasController');
 
-
+//@TODO borrar despues.Solo para pruebas
+Route::post('pagar','RequestServiceController@makePay');
 
 
 Route::middleware(['auth:api','dueno'])->group(function (){
