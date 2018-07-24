@@ -52,4 +52,7 @@ Route::middleware(['auth:api','admin'])->group(function (){
 Route::middleware(['auth:api','piloto'])->group(function (){
 
     Route::post('/pilotoevalua/{id}','EvaluacionController@pilotoEvalua');
+
+    //Ruta para subir foto
+    Route::post('/subirfoto/{id}','FotoDanoController@uploadPhoto');
 });
