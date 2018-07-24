@@ -16,7 +16,7 @@ class EvaluacionController extends Controller
 
 
     /*ev cliente*/
-    
+
     public function clienteEvalua(Request $request, $id)
     {
         try{
