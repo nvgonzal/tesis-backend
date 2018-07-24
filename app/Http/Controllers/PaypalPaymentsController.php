@@ -81,7 +81,7 @@ class PaypalPaymentsController extends Controller
         }
         catch (PayPalConnectionException $e){
 
-            return ['success'=>'false','message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>'500'];
+            return ['success'=>'false','message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>$e->getCode()];
         }
         $aprovalLink = $payment->getApprovalLink();
 
@@ -101,7 +101,7 @@ class PaypalPaymentsController extends Controller
 
 
         if ($result->getState() == 'approved'){
-            return view('paypal_payment.approved',compact('result',$result));
+            return redirect('pago/aprovado')->with('result',$result);
         }
 
         return view('paypal_payment.failed',$result);
