@@ -14,6 +14,8 @@ use App\Cliente;
 class EvaluacionController extends Controller
 {
 
+    /*funcion evaluacion desde cliente*/
+
     public function clienteEvalua(Request $request, $id)
     {
         try{
@@ -40,6 +42,10 @@ class EvaluacionController extends Controller
         }
 
     }
+
+
+    /*funcion evaluacion desde piloto*/
+
 
     public function pilotoEvalua (Request $request, $id)
     {

@@ -41,8 +41,8 @@ Route::middleware(['auth:api','dueno'])->group(function (){
 
 Route::middleware(['auth:api','cliente'])->group(function (){
     Route::post('/servicio','RequestServiceController@registerService');
-    Route::post('buscar','BuscarGruaController@harvesine');
-    Route::post('clientevalua','EvaluacionController@clienteEvalua');
+    Route::post('/buscar','BuscarGruaController@harvesine');
+    Route::post('/clientevalua/{id}','EvaluacionController@clienteEvalua');
 });
 
 Route::middleware(['auth:api','admin'])->group(function (){
@@ -51,5 +51,5 @@ Route::middleware(['auth:api','admin'])->group(function (){
 
 Route::middleware(['auth:api','piloto'])->group(function (){
 
-    Route::post('pilotoevalua','EmpresaEvaluaController@pilotoevalua');
+    Route::post('/pilotoevalua/{id}','EvaluacionController@pilotoEvalua');
 });
