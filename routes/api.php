@@ -42,7 +42,7 @@ Route::middleware(['auth:api','dueno'])->group(function (){
 Route::middleware(['auth:api','cliente'])->group(function (){
     Route::post('/servicio','RequestServiceController@registerService');
     Route::post('buscar','BuscarGruaController@harvesine');
-    Route::post('clientevalua','ClienteEvaluaController@clienteEvalua');
+    Route::post('clientevalua','EvaluacionController@clienteEvalua');
 });
 
 Route::middleware(['auth:api','admin'])->group(function (){

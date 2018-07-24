@@ -11,14 +11,14 @@ use App\Servicio;
 use App\Cliente;
 
 
-class ClienteEvaluaController extends Controller
+class EvaluacionController extends Controller
 {
 
-    public function clienteEvalua(Request $request)
+    public function clienteEvalua(Request $request, $id)
     {
         try{
             $user = User::findOrFail($request->user()->id);
-            $servicio = Servicio::findOrFail($request->id);
+            $servicio = Servicio::findOrFail($id);
 
             $empresa = Empresa::findOrFail($servicio->id_empresa);
             $servicio->evaluacion_cliente = $request->evaluacion_cliente;
@@ -39,5 +39,33 @@ class ClienteEvaluaController extends Controller
             return response()->json('error al evaluar', $e);
         }
 
+    }
+
+    public function pilotoEvalua (Request $request, $id)
+    {
+        try{
+
+            $user = User::findOrFail($request->user()->id);
+            $servicio = Servicio::findOrFail($id);
+
+            $cliente = Cliente::findOrFail($servicio->id_cliente);
+
+            $servicio->evaluacion_empresa = $request->evaluacion_empresa;
+            $servicio->save();
+
+            $avg = DB::table('servicios')
+                ->where('id_cliente',$servicio->id_cliente)
+                ->where('estado' , 'finalizado')
+                ->avg('evaluacion_empresa');
+
+            $cliente->valoracion = $avg;
+            $cliente->save();
+
+            return response()->json($avg);
+
+        }catch (Exception $e){
+
+            return response()->json('Problema al evaluar a cliente');
+        }
     }
 }
