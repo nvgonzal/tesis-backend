@@ -111,8 +111,9 @@ class BuscarGruaController extends Controller
     /**
      * Returns Bases near User
      *
-     * @param  float $latitud
-     * @param  float $longitud
+     * @param float $latitud
+     * @param float $longitud
+     * @param integer $distancia
      *
      * @return \Illuminate\Http\Response
      */
@@ -126,7 +127,7 @@ class BuscarGruaController extends Controller
 
         $latitud = $request->latitud;
         $longitud = $request->longitud;
-        $radius = 10;
+        $distancia = 9;
 
         $empresa = Empresa::select('*')->selectRaw('( 6371 * acos( cos( radians(?) ) *
                                cos( radians( latitud) )
@@ -134,7 +135,7 @@ class BuscarGruaController extends Controller
                                ) + sin( radians(?) ) *
                                sin( radians( latitud ) ) )
                              ) AS distance', [$latitud, $longitud, $latitud])
-            ->havingRaw("distance < ?", [$radius])
+            ->havingRaw("distance < ?", [$distancia])
             ->get();
 
 
