@@ -15,15 +15,16 @@ class FotoDanoController extends Controller
         $service = Servicio::find($id);
         $user = User::find($request->user()->id);
 
-        if ($service->id_piloto == $user->chofer->id){
+        if ($service->id_chofer == $user->chofer->id){
 
             $rules = [
-                'descripcion'   => 'required',
                 'foto'          => 'image|dimensions:max_width=1200,max_height=1200'
             ];
 
+            $data = $request->only(['descripcion','foto']);
+
             try {
-                $validator = Validator::make($request, $rules);
+                $validator = Validator::make($data, $rules);
             } catch (ValidationException $e) {
                 return response()->json(['message'=>'Hay errores en tus datos','errors'=>$e->errors()]);
             }
@@ -32,14 +33,14 @@ class FotoDanoController extends Controller
             }
 
             $photo = $request->file('foto');
-            $url = 'niru_'.md5(time()).'.'.$photo->getClientOriginalExtension();
+            $nombre = 'niru_'.md5(time()).'.'.$photo->getClientOriginalExtension();
 
-            Storage::disk('s3')->put('damage-photo/'.$url,$photo);
+            $request->foto->storeAs('damage-photo',$nombre,'s3');
+            //Storage::disk('s3')->put('damage-photo/',$photo);
 
             $damagePhoto = new FotoDaño();
 
-            $damagePhoto->url           = env('d2llruesx10ck5.cloudfront.net').'/'.$url;
-            $damagePhoto->descripcion   = $request->descripcion;
+            $damagePhoto->url           = env('AWS_CLOUDFRONT_DOMAIN').'/'.$nombre;
             $damagePhoto->id_servicio   = $id;
             $damagePhoto->save();
 
