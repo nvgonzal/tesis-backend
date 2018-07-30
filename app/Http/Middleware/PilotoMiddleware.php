@@ -15,7 +15,7 @@ class PilotoMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->tipo_usuario == 'chofer') {
+        if ($request->user()->tipo_usuario == ('chofer' || 'dueño')) {
             return $next($request);
         }
         return response()->json(['message'=>'No estas autorizado'],403);
