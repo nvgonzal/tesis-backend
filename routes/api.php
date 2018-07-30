@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,18 +15,14 @@ Route::post('/register','AuthController@register');
 Route::post('/login','AuthController@login');
 
 
-
-
-Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
-
-
-Route::apiResource('gruas','GruasController');
-
 //@TODO borrar despues.Solo para pruebas
 Route::post('pagar','RequestServiceController@makePay');
 
 
 Route::middleware(['auth:api','dueno'])->group(function (){
+
+    //Rutas de registro de gruas
+    Route::apiResource('gruas','GruasController');
 
     //Rutas de registro de piloto
     Route::get('/choferes','ChoferController@index');
@@ -47,6 +41,7 @@ Route::middleware(['auth:api','cliente'])->group(function (){
 
 Route::middleware(['auth:api','admin'])->group(function (){
 
+    Route::apiResource('empresas','EmpresasController');
 });
 
 Route::middleware(['auth:api','piloto'])->group(function (){

@@ -44,7 +44,7 @@ class AuthController extends Controller
             return response()->json(['message'=>'Hay errores en los campos del formulario','error'=>$validator->messages()]);
         }
         $data = LoginProxy::attemptLogin($data['email'],$data['password']);
-        return response()->json($data);
+        return response()->json($data,$data['status']);
     }
 
     /**

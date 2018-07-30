@@ -18,10 +18,10 @@ class FotoDanoController extends Controller
         if ($service->id_chofer == $user->chofer->id){
 
             $rules = [
-                'foto'          => 'image|dimensions:max_width=1200,max_height=1200'
+                'foto'          => 'required|image|dimensions:max_width=4500,max_height=2500'
             ];
 
-            $data = $request->only(['descripcion','foto']);
+            $data = $request->only(['foto']);
 
             try {
                 $validator = Validator::make($data, $rules);
@@ -35,16 +35,17 @@ class FotoDanoController extends Controller
             $photo = $request->file('foto');
             $nombre = 'niru_'.md5(time()).'.'.$photo->getClientOriginalExtension();
 
-            $request->foto->storeAs('damage-photo',$nombre,'s3');
+            $result = $request->foto->storeAs('damage-photo',$nombre,'s3');
             //Storage::disk('s3')->put('damage-photo/',$photo);
 
             $damagePhoto = new FotoDaño();
 
-            $damagePhoto->url           = env('AWS_CLOUDFRONT_DOMAIN').'/'.$nombre;
+            $damagePhoto->url           = env('AWS_CLOUDFRONT_IMAGE_DOMAIN').'/'.$nombre;
             $damagePhoto->id_servicio   = $id;
+            $damagePhoto->bucket_url    = $result;
             $damagePhoto->save();
 
-            return response()->json(['message'=>'Foto guardada con exito'],201);
+            return response()->json(['message'=>'Foto guardada con exito', 'resultado' => $result],201);
         }
         return response('Operacion no permitida',403);
     }
