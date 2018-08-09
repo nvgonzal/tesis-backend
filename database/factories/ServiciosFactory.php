@@ -15,6 +15,6 @@ $factory->define(\App\Servicio::class, function (Faker $faker) {
         'id_vehiculo'       => function (){
             return factory(App\Vehiculo::class)->create()->id;
         },
-        'descipcion'        => $faker->paragraph(),
+        'descripcion'        => $faker->paragraph(),
     ];
 });
