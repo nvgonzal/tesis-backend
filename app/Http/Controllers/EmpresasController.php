@@ -51,7 +51,7 @@ class EmpresasController extends Controller
 
         }
         catch (Exception $e){
-            $mensaje = ['mensaje' => 'Error al crear objeto'];
+            $mensaje = ['mensaje' => 'Error al crear Empresa'];
             return response()->json($mensaje,500);
 
         }

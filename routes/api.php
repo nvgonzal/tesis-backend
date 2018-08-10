@@ -22,7 +22,7 @@ Route::post('/login','AuthController@login');
 Route::apiResource('empresas','EmpresasController')->middleware('auth:api');
 
 
-Route::apiResource('gruas','GruasController');
+//Route::apiResource('gruas','GruasController');
 
 //@TODO borrar despues.Solo para pruebas
 Route::post('pagar','RequestServiceController@makePay');
@@ -34,6 +34,8 @@ Route::middleware(['auth:api','dueno'])->group(function (){
     Route::get('/choferes','ChoferController@index');
     Route::post('/choferes','ChoferController@createChofer');
     Route::delete('/choferes/{id}','ChoferController@delete');
+
+    Route::get('/gruas','GruasController@index');
 
     //Rutas de servicio
     Route::get('/servicios','RequestServiceController@indexRequestedServices');

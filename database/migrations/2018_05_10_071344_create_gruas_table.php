@@ -15,7 +15,7 @@ class CreateGruasTable extends Migration
     {
         Schema::create('gruas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('patente');
+            $table->string('patente')->unique();
             $table->string('tipo');
             $table->string('marca');
             $table->string('modelo');
