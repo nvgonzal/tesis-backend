@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Chofer;
 use App\Mail\ConfirmacionRegistroChofer;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\User;
 use Mail;
@@ -16,7 +17,12 @@ class ChoferController extends Controller
 
         $choferes = $user->chofer->empresa->choferes;
 
-        return response()->json($choferes);
+        $data = new Collection();
+        foreach ($choferes as $chofer){
+            $data = $data->add(User::find($chofer->id_user));
+        }
+
+        return response()->json($data->toArray());
     }
 
     public function createChofer(Request $request){
