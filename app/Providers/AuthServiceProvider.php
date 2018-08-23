@@ -26,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('upload-photo',function ($user,$service){
+            return $user->chofer->id == $service->id_chofer;
+        });
+
         Passport::routes();
         //
     }

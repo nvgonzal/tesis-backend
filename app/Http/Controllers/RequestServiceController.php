@@ -15,8 +15,9 @@ class RequestServiceController extends Controller
             'id_vehiculo'   => 'required|exists:vehiculos,id',
             'ubicacion'     => 'required',
             'destino'       => 'required',
+            'descripcion'   => 'required'
         ];
-        $data = $request->only('id_empresa','id_vehiculo','ubicacion','destino');
+        $data = $request->only('id_empresa','id_vehiculo','ubicacion','destino','descripcion');
 
         $validator = Validator::make($data,$rules);
 
@@ -34,6 +35,7 @@ class RequestServiceController extends Controller
         $servicio->ubicacion    = $request->ubicacion;
         $servicio->destino      = $request->ubicacion;
         $servicio->id_cliente   = $clientID;
+        $servicio->descripcion  = $request->descripcion;
 
         $servicio->save();
 
