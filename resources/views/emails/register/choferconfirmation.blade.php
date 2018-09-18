@@ -11,6 +11,7 @@
 <p>Para hacer uso de ella ingresa con los siguientes datos</p>
 <br>
 Email:{{$user->email}}
+<br>
 Contraseña: {{$password}}
 <p>Ya puedes hacer hacer uso de tu cuenta. Si olvidas tu contraseña se te enviara un link de recuperacion a este correo</p>
 </body>

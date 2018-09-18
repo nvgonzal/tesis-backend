@@ -54,7 +54,7 @@ class AuthController extends Controller
      * @return User
      * @throws ValidationException cuando existen errores de validacion en los campos de request
      */
-    public static function createUser(Request $request, $tipo_usuario,$random_password = ""){
+    public static function createUser(Request $request, $tipo_usuario,$random_password = null){
 
         $keys = collect(['nombre', 'email', 'password', 'ap_paterno'
             ,'ap_materno','telefono_fijo','rut', 'celular']);
@@ -71,9 +71,9 @@ class AuthController extends Controller
 
         ]);
 
-        if (!empty($random_password)){
-            $keys->except('password');
-            $rules->except('password');
+        if (isset($random_password)){
+            $keys = $keys->except('password');
+            $rules = $rules->except('password');
         }
 
         $data = $request->only($keys->toArray());
@@ -94,7 +94,7 @@ class AuthController extends Controller
         $user->email            = $request->email;
         $user->tipo_usuario     = $tipo_usuario;
 
-        if (!empty($random_password)){
+        if (isset($random_password)){
             $user->password = Hash::make($random_password);
         }
         else {

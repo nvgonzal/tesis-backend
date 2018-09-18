@@ -6,6 +6,7 @@ use App\Chofer;
 use App\Mail\ConfirmacionRegistroChofer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use App\User;
 use Mail;
 
@@ -32,8 +33,11 @@ class ChoferController extends Controller
         $empresaId = $user->chofer->empresa->id;
 
         $random_password = str_random(10);
-        $user = AuthController::createUser($request,'chofer',$random_password);
-
+        try {
+            $user = AuthController::createUser($request,'chofer',$random_password);
+        } catch (ValidationException $e) {
+            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages(), 'trace' => $e->getTrace()],400);
+        }
         $chofer = new Chofer();
         $chofer->id_empresa = $empresaId;
         $chofer->id_user = $user->id;
@@ -46,9 +50,9 @@ class ChoferController extends Controller
 
     public function delete(Request $request, $id){
         $requestUser = User::find($request->user()->id);
-        $chofer = Chofer::find($id);
-        $user = $chofer->usuario;
-        if (!$user->tipo_usuario = 'chofer' || $requestUser->chofer->empresa->id != $chofer->empresa->id ){
+        $chofer = User::find($id);
+        $user = $chofer->chofer;
+        if (!$chofer->tipo_usuario = 'chofer' || $requestUser->chofer->empresa->id != $chofer->chofer->empresa->id ){
             return response()->json(['message' => 'No es posible borrar esa cuenta'],403);
         }
         $chofer->delete();

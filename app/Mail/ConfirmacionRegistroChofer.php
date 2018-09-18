@@ -23,7 +23,7 @@ class ConfirmacionRegistroChofer extends Mailable
     public function __construct(User $user,$password)
     {
         $this->user = $user;
-        $this->$password = $password;
+        $this->password = $password;
     }
 
     /**
@@ -33,6 +33,6 @@ class ConfirmacionRegistroChofer extends Mailable
      */
     public function build()
     {
-        return $this->view('email.register.choferconfirmation');
+        return $this->view('emails.register.choferconfirmation');
     }
 }
