@@ -22,8 +22,8 @@ class userEmpresaCreate extends Mailable
      */
     public function __construct(User $usuario,$random_pass)
     {
-        this->usuario = $usuario;
-        this->$password = $random_pass;
+        $this->usuario = $usuario;
+        $this->password = $random_pass;
     }
 
     /**

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Validation\UnauthorizedException;
 use URL;
+use App\User;
 
 class LoginProxy
 {
@@ -26,11 +27,13 @@ class LoginProxy
             $data = ['message' => 'Tus credenciales son incorrectas' , 'status' => '401'];
             return $data;
         }
+        $user = User::where('email',$email)->first();
 
         $responseBody = \GuzzleHttp\json_decode($response->getBody());
         $data = [
             'access_token'  => $responseBody->access_token,
             'expires_in'    => $responseBody->expires_in,
+            'user'          => $user->toArray(),
             'status'        => '200'
         ];
         return $data;
