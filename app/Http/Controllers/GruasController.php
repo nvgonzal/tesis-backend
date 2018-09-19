@@ -20,7 +20,6 @@ class GruasController extends Controller
     public function index(Request $request)
     {
         $user = User::findOrFail($request->user()->id);
-        //$grua = Grua::where('id_empresa',$user->chofer->empresa->gruas);
         $grua = $user->chofer->empresa->gruas;
         return response()->json($grua);
     }
