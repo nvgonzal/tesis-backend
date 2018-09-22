@@ -33,6 +33,6 @@ class userEmpresaCreate extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->subject('Cuenta resgitrada con exito')->view('emails.register.empresaConfirmation');
     }
 }
