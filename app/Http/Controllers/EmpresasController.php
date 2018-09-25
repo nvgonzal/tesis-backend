@@ -70,11 +70,10 @@ class EmpresasController extends Controller
             Mail::to($usuario->email)->send(new userEmpresaCreate($usuario, $random_pass));
 
             return response()->json($mensaje, 201);
-
-        } catch (Exception $e) {
-            $mensaje = ['mensaje' => 'Error al crear objeto'];
-            return response()->json($mensaje, 500);
-
+        }
+        catch (Exception $e){
+            $mensaje = ['mensaje' => 'Error al crear Empresa'];
+            return response()->json($mensaje,500);
         }
 
     }
