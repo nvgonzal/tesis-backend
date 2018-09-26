@@ -70,15 +70,37 @@ class RequestServiceController extends Controller
         $servicio->save();
     }
 
-    public function makePay(Request $request){
+    public function makePay(Request $request,$id){
+        $user = User::find($request->user()->id);
+        $servicio = Servicio::find($id);
+        if (!$servicio->estado == 'tomado'){
+            return response()->json(['message' => 'El servicio no puede ser pagado'],422);
+        }
+        if ($servicio->id_cliente != $user->cliente->id){
+            return response()->json(['message' => 'No puedes pagar ese servicio'],403);
+        }
 
-        //@TODO Solo para pruebas.
-        $data = $request->only(['monto','emailEmpresa']);
+        $monto = $servicio->precio_final;
+        $cuenta_pago = $servicio->empresa->cuenta_pago;
 
         $payController = new PaypalPaymentsController();
 
-        $response = $payController->payService($data['monto'],$data['emailEmpresa']);
+        $response = $payController->payService($monto,$cuenta_pago);
 
         return response()->json($response,$response['status']);
+    }
+
+    public function getPrice(Request $request, $id) {
+        $servicio = Servicio::find($id);
+        $user = User::find($request->user()->id);
+        if ($servicio->id_cliente != $user->cliente->id) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
+        return response()->json([
+            'monto'             => $servicio->precio_final,
+            'nombre_empresa'    => $servicio->empresa->nombre,
+            'direccion'         => $servicio->empresa->direccion,
+            'cuenta_pago'       => $servicio->empresa->cuenta_pago,]);
+
     }
 }

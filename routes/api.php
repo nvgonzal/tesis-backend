@@ -15,10 +15,6 @@ Route::post('/register','AuthController@register');
 Route::post('/login','AuthController@login');
 
 
-//@TODO borrar despues.Solo para pruebas
-Route::post('pagar','RequestServiceController@makePay');
-
-
 Route::middleware(['auth:api','dueno'])->group(function (){
 
     //Rutas de registro de gruas
@@ -37,6 +33,12 @@ Route::middleware(['auth:api','cliente'])->group(function (){
     Route::post('/servicio','RequestServiceController@registerService');
     Route::post('buscar','BuscarGruaController@harvesine');
     Route::post('/clientevalua/{id}','EvaluacionController@clienteEvalua');
+
+    Route::get('/monto/{id}','RequestServiceController@getPrice');
+    Route::get('/pagar/{id}','RequestServiceController@makePay');
+
+    Route::get('/vehiculos', 'VehiculoController@index');
+    Route::get('/vehiculos/{id}', 'VehiculoController@show');
 });
 
 Route::middleware(['auth:api','admin'])->group(function (){
