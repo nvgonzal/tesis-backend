@@ -32,13 +32,17 @@ Route::middleware(['auth:api','dueno'])->group(function (){
 Route::middleware(['auth:api','cliente'])->group(function (){
     Route::post('/servicio','RequestServiceController@registerService');
     Route::post('buscar','BuscarGruaController@harvesine');
-    Route::post('/clientevalua/{id}','EvaluacionController@clienteEvalua');
+    Route::patch('/clienteevalua/{id}','EvaluacionController@clienteEvalua');
+    Route::get('/clienteevalua/getinfo/{id}','EvaluacionController@getInfoChoferServicio');
 
     Route::get('/monto/{id}','RequestServiceController@getPrice');
     Route::get('/pagar/{id}','RequestServiceController@makePay');
 
     Route::get('/vehiculos', 'VehiculoController@index');
+    Route::post('/vehiculos', 'VehiculoController@store');
     Route::get('/vehiculos/{id}', 'VehiculoController@show');
+    Route::put('/vehiculos/{id}', 'VehiculoController@edit');
+    Route::delete('/vehiculos/{id}', 'VehiculoController@destroy');
 });
 
 Route::middleware(['auth:api','admin'])->group(function (){

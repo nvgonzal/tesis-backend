@@ -31,8 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Passport::routes();
-
-        Passport::tokensExpireIn(now()->addMinutes(30));
-        Passport::refreshTokensExpireIn(now()->addHours(2));
+/*  @TODO Eliminar comentario despues de pruebas
+        Passport::tokensExpireIn(now()->addMinutes(90));
+        Passport::refreshTokensExpireIn(now()->addHours(2));*/
     }
 }

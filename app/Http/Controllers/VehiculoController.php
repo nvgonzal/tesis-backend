@@ -31,7 +31,7 @@ class VehiculoController extends Controller
      */
     public function store(Request $request)
     {
-        $clientId = User::find($request->user()->id)->cliente;
+        $clientId = User::find($request->user()->id)->cliente->id;
 
         $data = $request->only(['patente_vehiculo','marca','modelo','color']);
         $rules = [
@@ -56,7 +56,7 @@ class VehiculoController extends Controller
 
         $vehiculo->save();
 
-        return response()->json(['message'=> 'Vehiculo registrado con exito']);
+        return response()->json(['message'=> 'Vehiculo registrado con exito'],201);
 
     }
 
@@ -84,7 +84,36 @@ class VehiculoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $clientId = User::find($request->user()->id)->cliente->id;
+
+        $vehiculo = Vehiculo::find($id);
+
+        if($clientId != $vehiculo->id_cliente) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
+
+        $data = $request->only(['patente_vehiculo','marca','modelo','color']);
+        $rules = [
+            'patente_vehiculo'  => 'required',
+            'marca'             => 'required',
+            'modelo'            => 'required',
+            'color'             => 'required',
+        ];
+
+        $validator = Validator::make($data,$rules);
+
+        if ($validator->fails()){
+            return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
+        }
+
+        $vehiculo->patente_vehiculo = $request->patente_vehiculo;
+        $vehiculo->marca            = $request->marca;
+        $vehiculo->modelo           = $request->modelo;
+        $vehiculo->color            = $request->color;
+
+        $vehiculo->save();
+
+        return response()->json(['message'=> 'Vehiculo registrado con exito']);
     }
 
     /**
@@ -93,8 +122,16 @@ class VehiculoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $user = User::find($request->user()->id);
+        $vehiculo = Vehiculo::find($id);
+
+        if($user->cliente->id != $vehiculo->id_cliente) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
+        $vehiculo->delete();
+        return response()->json(['message'=>'Vehiculo eliminado']);
+
     }
 }

@@ -23,6 +23,14 @@ class EvaluacionController extends Controller
             $user = User::findOrFail($request->user()->id);
             $servicio = Servicio::findOrFail($id);
 
+            if ($user->cliente->id != $servicio->id_cliente) {
+                return response()->json(['message' => 'No autorizado'],403);
+            }
+
+            if ($servicio->estado != 'finalizado') {
+                return response()->json(['message' => 'No es posible realizar esta accion'],400);
+            }
+
             $empresa = Empresa::findOrFail($servicio->id_empresa);
             $servicio->evaluacion_cliente = $request->evaluacion_cliente;
             $servicio->save();
@@ -36,7 +44,7 @@ class EvaluacionController extends Controller
             $empresa->save();
 
 
-            $msg = ['message' => 'Evaluacion a' . $empresa->nombre . 'Completa', 'data' => $servicio];
+            $msg = ['message' => 'Tu evaluacion ha sido registrada. Gracias por usar nuestro servicio.'];
             return response()->json($msg,201);
         }catch (Exception $e){
             return response()->json('error al evaluar', $e);
@@ -70,5 +78,16 @@ class EvaluacionController extends Controller
 
             return response()->json('Problema al evaluar a cliente');
         }
+    }
+
+    public function getInfoChoferServicio(Request $request, $id) {
+        $user = User::find($request->user()->id);
+        $servicio = Servicio::find($id);
+        if ($user->cliente->id != $servicio->id_cliente) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+        $chofer = $servicio->chofer->usuario;
+        $empresa = $servicio->empresa;
+        return response()->json(['chofer'=>$chofer,'empresa'=>$empresa]);
     }
 }
