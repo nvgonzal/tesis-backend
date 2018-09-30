@@ -25,8 +25,8 @@ Route::middleware(['auth:api','dueno'])->group(function (){
     Route::post('/choferes','ChoferController@createChofer');
     Route::delete('/choferes/{id}','ChoferController@delete');
 
-    //Rutas de servicio
-    Route::get('/servicios','RequestServiceController@indexRequestedServices');
+    Route::get('/servicios/historico','ServicioController@indexRecord');
+
 });
 
 Route::middleware(['auth:api','cliente'])->group(function (){
@@ -53,6 +53,9 @@ Route::middleware(['auth:api','admin'])->group(function (){
 Route::middleware(['auth:api','piloto'])->group(function (){
 
     Route::post('/pilotoevalua/{id}','EvaluacionController@pilotoEvalua');
+
+    //Rutas de servicio
+    Route::get('/servicios','ServicioController@indexRequestedServices');
 
     //Ruta para subir foto
     Route::post('/subirfoto/{id}','FotoDanoController@uploadPhoto');

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,5 +32,15 @@ class Servicio extends Model
 
     public function vehiculo(){
         return $this->belongsTo('App\Vehiculo','id_vehiculo');
+    }
+
+    public function scopeFinalizado(Builder $query, $id){
+        return $query->where('estado','=','finalizado')
+            ->where('id_empresa','=',$id);
+    }
+
+    public function scopeCreado(Builder $query, $id){
+        return $query->where('estado','=','creado')
+            ->where('id_empresa','=',$id);
     }
 }
