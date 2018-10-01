@@ -56,6 +56,7 @@ Route::middleware(['auth:api','piloto'])->group(function (){
 
     //Rutas de servicio
     Route::get('/servicios','ServicioController@indexRequestedServices');
+    Route::patch('/servicios/{idServicio}/take/{idPiloto}','RequestServiceController@takeRequest');
 
     //Ruta para subir foto
     Route::post('/subirfoto/{id}','FotoDanoController@uploadPhoto');
