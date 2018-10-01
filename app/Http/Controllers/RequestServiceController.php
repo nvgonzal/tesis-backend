@@ -39,22 +39,9 @@ class RequestServiceController extends Controller
 
         $servicio->save();
 
-        return response()->json(['message'=>'Servicio registrado.'],201);
+        return response()->json($servicio,201);
 
 
-    }
-
-    /**Lista las servicios solicitados a la empresa del usuario que hace la solicitud
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function indexRequestedServices(Request $request){
-        $user = User::find($request->user()->id);
-
-        $servicios = $user->chofer->empresa->servicios;
-
-        return response()->json($servicios);
     }
 
     /**Registra un servicio con el pilo
@@ -64,9 +51,25 @@ class RequestServiceController extends Controller
      * @param $idPiloto
      */
     public function takeRequest(Request $request, $idServicio ,$idPiloto){
+        $rules = [
+            'monto' => 'required|numeric',
+            'id_grua' => 'required|exists:gruas,id'
+        ];
+        $data = $request->only('monto');
+
+        $validator = Validator::make($data,$rules);
+
+        if ($validator->fails()){
+            return response()->json(['message'=>'Hay errores en tus datos','errors'=>$validator->messages()]);
+        }
+        $cliente = new \GuzzleHttp\Client();
+
+        //$dolar;
+
         $servicio = Servicio::find($idServicio);
         $servicio->id_chofer = $idPiloto;
         $servicio->estado = 'tomado';
+        $servicio->precio_final = $request->monto;
         $servicio->save();
     }
 
