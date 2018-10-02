@@ -81,11 +81,11 @@ class PaypalPaymentsController extends Controller
         }
         catch (PayPalConnectionException $e){
 
-            return ['success'=>'false','message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>$e->getCode()];
+            return ['success'=>false,'message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>$e->getCode()];
         }
         $aprovalLink = $payment->getApprovalLink();
 
-        return ['success'=>'true','message'=>'Creado pago con PayPal. Usa el link para continuar con el pago','link'=>$aprovalLink,'status'=>'200'];
+        return ['success'=>true,'message'=>'Creado pago con PayPal. Usa el link para continuar con el pago','link'=>$aprovalLink,'status'=>'200'];
     }
 
     public function approved(Request $request){
