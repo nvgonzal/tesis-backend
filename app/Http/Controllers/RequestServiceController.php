@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Servicio;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
@@ -48,29 +49,55 @@ class RequestServiceController extends Controller
      *
      * @param Request $request
      * @param $idServicio
-     * @param $idPiloto
+     * @param $idUserPiloto
      */
-    public function takeRequest(Request $request, $idServicio ,$idPiloto){
+    public function takeRequest(Request $request, $idServicio , $idUserPiloto){
+        $servicio = Servicio::find($idServicio);
+        $user = User::find($request->user()->id);
+        if ($servicio->id_empresa != $user->chofer->empresa->id) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
         $rules = [
             'monto' => 'required|numeric',
             'id_grua' => 'required|exists:gruas,id'
         ];
-        $data = $request->only('monto');
+        $data = $request->only('monto','id_grua');
 
         $validator = Validator::make($data,$rules);
 
         if ($validator->fails()){
             return response()->json(['message'=>'Hay errores en tus datos','errors'=>$validator->messages()]);
         }
-        $cliente = new \GuzzleHttp\Client();
+        // Inicio de calculo de precio
+        $client = new \GuzzleHttp\Client();
+        try {
+            $response = $client->get('https://mindicador.cl/api/dolar');
+        } catch (ClientException $e) {
+            return response()->json(['message' => 'Error al obtener el precio del dolar']);
+        }
+        $response = \GuzzleHttp\json_decode($response->getBody());
 
-        //$dolar;
+        $responseBody = json_decode(json_encode($response),true);
+
+        $dolar = $responseBody['serie'];
+
+        $precio_dolar = $dolar[0]['valor'];
+
+        $precio_final = intval($request->monto) / $precio_dolar;
+         // Fin calculo de precio
+
+        $userPiloto = User::find($idUserPiloto);
 
         $servicio = Servicio::find($idServicio);
-        $servicio->id_chofer = $idPiloto;
+        $servicio->id_chofer = $userPiloto->chofer->id;
+        $servicio->id_grua = $request->id_grua;
         $servicio->estado = 'tomado';
-        $servicio->precio_final = $request->monto;
+        $servicio->precio_final = $precio_final;
+        $servicio->precio_dolar = $precio_dolar;
+        $servicio->precio_pesos = $request->monto;
         $servicio->save();
+
+        return response()->json(['message' => 'Servicio tomado']);
     }
 
     public function makePay(Request $request,$id){
@@ -100,10 +127,29 @@ class RequestServiceController extends Controller
             return response()->json(['message' => 'No autorizado'],403);
         }
         return response()->json([
-            'monto'             => $servicio->precio_final,
+            'precio_final'      => $servicio->precio_final,
             'nombre_empresa'    => $servicio->empresa->nombre,
             'direccion'         => $servicio->empresa->direccion,
-            'cuenta_pago'       => $servicio->empresa->cuenta_pago,]);
+            'cuenta_pago'       => $servicio->empresa->cuenta_pago,
+            'monto'             => $servicio->precio_pesos,
+            'valor_dolar'       => $servicio->precio_dolar,
+            ]);
 
+    }
+
+    public function isPayable(Request $request, $id) {
+        $servicio = Servicio::find($id);
+        $user = User::find($request->user()->id);
+        if ($servicio->id_cliente != $user->cliente->id) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
+        while (true) {
+            $servicio = Servicio::find($id);
+            if ($servicio->precio_final != null) {
+                return response()->json(true);
+            }
+            sleep(1);
+        }
+        return response()->json(false);
     }
 }

@@ -35,6 +35,7 @@ Route::middleware(['auth:api','cliente'])->group(function (){
     Route::patch('/clienteevalua/{id}','EvaluacionController@clienteEvalua');
     Route::get('/clienteevalua/getinfo/{id}','EvaluacionController@getInfoChoferServicio');
 
+    Route::get('/servicio/payable/{id}', 'RequestServiceController@isPayable');
     Route::get('/monto/{id}','RequestServiceController@getPrice');
     Route::get('/pagar/{id}','RequestServiceController@makePay');
 
