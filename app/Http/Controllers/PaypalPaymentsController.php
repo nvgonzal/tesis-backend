@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Servicio;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -38,7 +39,7 @@ class PaypalPaymentsController extends Controller
     }
 
 
-    public function payService($monto,$emailEmpresa){
+    public function payService($monto,$emailEmpresa,Servicio $servicio){
 
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
@@ -66,7 +67,7 @@ class PaypalPaymentsController extends Controller
             ->setDescription("Pago para servicio de grua");
 
         $redirectUrl = new RedirectUrls();
-        $redirectUrl->setReturnUrl(URL::to('/pago/aprovado'))
+        $redirectUrl->setReturnUrl(URL::to('/paypal/aprovado'))
             ->setCancelUrl(URL::to('/pago/cancelado'));
 
 
@@ -83,6 +84,10 @@ class PaypalPaymentsController extends Controller
 
             return ['success'=>false,'message'=>'Error al ejecutar el pago. Intentelo mas tarde.','status'=>$e->getCode()];
         }
+        $paymentID = $payment->getId();
+        $servicio->paypal_payment_id = $paymentID;
+        $servicio->save();
+
         $aprovalLink = $payment->getApprovalLink();
 
         return ['success'=>true,'message'=>'Creado pago con PayPal. Usa el link para continuar con el pago','link'=>$aprovalLink,'status'=>'200'];
@@ -91,6 +96,8 @@ class PaypalPaymentsController extends Controller
     public function approved(Request $request){
 
         $paymentId = $request['paymentId'];
+        $servicio = Servicio::where('paypal_payment_id',$paymentId)->get();
+        $servicio = Servicio::find($servicio[0]->id);
 
         $payment = Payment::get($paymentId,$this->apiContext);
 
@@ -99,9 +106,11 @@ class PaypalPaymentsController extends Controller
 
         $result = $payment->execute($execution, $this->apiContext);
 
-
         if ($result->getState() == 'approved'){
-            return redirect('pago/aprovado')->with('result',$result);
+            $angularBack = env('APP_ANGULAR_APP').'/servicio/pagado/'.$servicio->id;
+            $servicio->estado = 'pagado';
+            $servicio->save();
+            return redirect('/pago/aprovado')->with('angularBack',$angularBack);
         }
 
         return view('paypal_payment.failed',$result);
