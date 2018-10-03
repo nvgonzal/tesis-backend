@@ -36,6 +36,9 @@ Route::middleware(['auth:api','cliente'])->group(function (){
     Route::get('/clienteevalua/getinfo/{id}','EvaluacionController@getInfoChoferServicio');
 
     Route::get('/servicio/payable/{id}', 'RequestServiceController@isPayable');
+    Route::get('/servicio/{id}', 'ServicioController@show');
+    Route::get('/servicio/{id}/finalizable', 'RequestServiceController@isFinalizable');
+
     Route::get('/monto/{id}','RequestServiceController@getPrice');
     Route::get('/pagar/{id}','RequestServiceController@makePay');
 
@@ -61,4 +64,6 @@ Route::middleware(['auth:api','piloto'])->group(function (){
 
     //Ruta para subir foto
     Route::post('/subirfoto/{id}','FotoDanoController@uploadPhoto');
+
+    Route::get('servicios/{id}/finalizar');
 });

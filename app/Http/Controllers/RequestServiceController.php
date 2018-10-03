@@ -115,7 +115,7 @@ class RequestServiceController extends Controller
 
         $payController = new PaypalPaymentsController();
 
-        $response = $payController->payService($monto,$cuenta_pago);
+        $response = $payController->payService($monto,$cuenta_pago,$servicio);
 
         return response()->json($response,$response['status']);
     }
@@ -151,5 +151,33 @@ class RequestServiceController extends Controller
             sleep(1);
         }
         return response()->json(false);
+    }
+
+    public function finalizarServicio(Request $request, $id){
+        $servicio = Servicio::find($id);
+        $user = User::find($request->user()->id);
+        if ($servicio->estado != 'pagado') {
+            return response()->json(['message' => 'No es posible realizar esta accion ahora.'],400);
+        }
+        if ($servicio->id_chofer != $user->chofer->id) {
+            return response()->json(['message' => 'No autorizado.'],403);
+        }
+        $servicio->estado = 'finalizado';
+        $servicio->save();
+        return response()->json(['message' => 'Servicio finalizado.']);
+    }
+
+    public function isFinalizable(Request $request, $id) {
+        $servicio = Servicio::find($id);
+        $user = User::find($request->user()->id);
+        if ($servicio->id_cliente != $user->cliente->id) {
+            return response()->json(['message' => 'No autorizado.'],403);
+        }
+        if ($servicio->estado != 'finalizado') {
+            return response()->json(false,400);
+        }
+        else {
+            return response()->json(true);
+        }
     }
 }
