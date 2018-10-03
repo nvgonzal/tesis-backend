@@ -27,4 +27,16 @@ class ServicioController extends Controller
         $servicios = Servicio::finalizado($empresa_id)->lastest()->get();
         return response()->json($servicios);
     }
+
+    public function show(Request $request, $id) {
+        $user = User::find($request->user()->id);
+        $servicio = Servicio::find($id);
+        if (!$servicio) {
+            return response()->json(['error' => ['message' => 'No se ha encontrado el servicio']], 404);
+        }
+        if ($servicio->id_cliente != $user->cliente->id) {
+            return response()->json(['message' => 'No autorizado'],403);
+        }
+        return response()->json($servicio, 200);
+    }
 }

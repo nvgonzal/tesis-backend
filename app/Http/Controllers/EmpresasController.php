@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Chofer;
 use App\Empresa;
 use Illuminate\Http\Request;
 use App\Mail\userEmpresaCreate;
 use Illuminate\Validation\ValidationException;
+use GuzzleHttp\Exception\ClientException;
 use Mail, Validator;
 
 class EmpresasController extends Controller
@@ -50,6 +52,27 @@ class EmpresasController extends Controller
         if ($validator->fails()){
             return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
         }
+        $client = new \GuzzleHttp\Client();
+        $direccion = str_replace(' ','+',$request->direccion);
+        $api_key = env('GOOGLE_MAPS_API_KEY');
+        try {
+            $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$direccion.'&key='.$api_key);
+        }
+        catch (ClientException $e) {
+            return response()->json(['message' => 'Error al obtener coordenadas.']);
+        }
+        $response = \GuzzleHttp\json_decode($response->getBody());
+        $responseBody = json_decode(json_encode($response),true);
+        switch ($responseBody['status']) {
+            case 'ZERO_RESULTS':
+                return response()->json(['message' => 'Direccion invalida para obtener coordenadas'],421);
+                break;
+            case 'OK':
+                $latitud = $responseBody['results'][0]['geometry']['location']['lat'];
+                $longitud = $responseBody['results'][0]['geometry']['location']['lng'];
+                break;
+        }
+
         $random_pass = str_random(8);
         try {
             $usuario = AuthController::createUser($request, 'dueño', $random_pass);
@@ -64,9 +87,17 @@ class EmpresasController extends Controller
             $empresa->rut = $request->rut_empresa;
             $empresa->direccion = $request->direccion;
             $empresa->cuenta_pago = $request->cuenta_pago;
+            $empresa->latitud = $latitud;
+            $empresa->longitud = $longitud;
             $empresa->save();
 
-            $mensaje = ['message' => 'Empresa' . $empresa->nombre . ' creado', 'data' => $empresa];
+
+            $chofer = new Chofer();
+            $chofer->id_user = $usuario->id;
+            $chofer->id_empresa = $empresa->id;
+            $chofer->save();
+
+            $mensaje = ['message' => 'Empresa registrada con exito'];
             Mail::to($usuario->email)->send(new userEmpresaCreate($usuario, $random_pass));
 
             return response()->json($mensaje, 201);

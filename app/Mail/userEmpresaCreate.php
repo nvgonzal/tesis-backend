@@ -12,7 +12,7 @@ class userEmpresaCreate extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $usuario;
+    public $user;
     public $password;
 
     /**
@@ -22,7 +22,7 @@ class userEmpresaCreate extends Mailable
      */
     public function __construct(User $usuario,$random_pass)
     {
-        $this->usuario = $usuario;
+        $this->user = $usuario;
         $this->password = $random_pass;
     }
 
@@ -33,6 +33,6 @@ class userEmpresaCreate extends Mailable
      */
     public function build()
     {
-        return $this->subject('Cuenta resgitrada con exito')->view('emails.register.empresaConfirmation');
+        return $this->subject('Cuenta registrada con exito')->view('emails.register.empresaConfirmation');
     }
 }
