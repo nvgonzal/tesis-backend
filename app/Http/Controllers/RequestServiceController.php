@@ -180,4 +180,25 @@ class RequestServiceController extends Controller
             return response()->json(true);
         }
     }
+
+    public function pilotoDescribirVehiculo(Request $request, $id){
+        $servicio = Servicio::find($id);
+        $user = User::find($request->user()->id);
+        if ($servicio->id_chofer != $user->chofer->id) {
+            return response()->json(['message' => 'No autorizado.'],403);
+        }
+        $rules = [
+            'descripcion_chofer' => 'required',
+            'alta_gama' => 'required|boolean'
+        ];
+        $data = $request->only('descripcion_chofer','alta_gama');
+        $validator = Validator::make($data,$rules);
+        if ($validator->fails()) {
+            return response()->json(['message'=>'Hay errores en tus datos','errors'=>$validator->messages()],422);
+        }
+        $servicio->descripcion_chofer = $request->descripcion_chofer;
+        $servicio->alta_gama = $request->alta_gama;
+        $servicio->save();
+        return response()->json(['message'=>'Descripcion guarda con exito']);
+    }
 }

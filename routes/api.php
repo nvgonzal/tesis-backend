@@ -65,5 +65,7 @@ Route::middleware(['auth:api','piloto'])->group(function (){
     //Ruta para subir foto
     Route::post('/subirfoto/{id}','FotoDanoController@uploadPhoto');
 
-    Route::get('servicios/{id}/finalizar');
+    Route::get('servicios/{id}/finalizar', 'RequestServiceController@finalizarServicio');
+
+    Route::patch('servicios/{id}/describir','RequestServiceController@pilotoDescribirVehiculo');
 });
