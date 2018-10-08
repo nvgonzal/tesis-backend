@@ -22,9 +22,6 @@ class ServicioController extends Controller
             $item = [
                 'id' => $servicio->id,
                 'id_empresa' => $servicio->id_empresa,
-                'id_chofer' => $servicio->id_chofer,
-                'id_grua' => $servicio->id_vehiculo,
-                'alta_gama' => $servicio->alta_gama,
                 'ubicacion' => $servicio->ubicacion,
                 'destino' => $servicio->destino,
                 'estado' => $servicio->estado,
@@ -33,13 +30,6 @@ class ServicioController extends Controller
                     'fecha' => $servicio->created_at->toDateTimeString()
                 ],
                 'descripcion' => $servicio->descripcion,
-                'descripcion_chofer' => $servicio->descripcion_chofer,
-                'evaluacion_cliente' => $servicio->evaluacion_cliente,
-                'evaluacion_empresa' => $servicio->evaluacion_empresa,
-                'precio_dolar' => $servicio->precio_dolar,
-                'precio_pesos' => $servicio->precio_pesos,
-                'precio_final' => $servicio->precio_final,
-                'chofer_info' => $servicio->chofer->usuario->toArray(),
                 'vehiculo_info' => $servicio->vehiculo->toArray(),
                 'cliente_info' => $servicio->cliente->usuario->toArray(),
             ];
