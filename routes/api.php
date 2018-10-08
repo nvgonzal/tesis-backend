@@ -68,4 +68,6 @@ Route::middleware(['auth:api','piloto'])->group(function (){
     Route::get('servicios/{id}/finalizar', 'RequestServiceController@finalizarServicio');
 
     Route::patch('servicios/{id}/describir','RequestServiceController@pilotoDescribirVehiculo');
+
+    Route::get('/gruaspiloto','GruasController@index');
 });
