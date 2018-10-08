@@ -78,6 +78,8 @@ class ServicioController extends Controller
                 'chofer_info' => $servicio->chofer->usuario->toArray(),
                 'vehiculo_info' => $servicio->vehiculo->toArray(),
                 'cliente_info' => $servicio->cliente->usuario->toArray(),
+                'grua_info' => $servicio->grua->toArray(),
+                'fotos_danos' => $servicio->fotos_daños,
             ];
             array_push($lista,$item);
         }
