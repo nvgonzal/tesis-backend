@@ -60,14 +60,14 @@ class AuthController extends Controller
             ,'apellido_materno','telefono_fijo','rut', 'celular']);
 
         $rules = collect([
-            'nombre'        => 'required|max:255',
-            'email'         => 'required|email|max:255|unique:users',
-            'password'      => 'required|min:6',
-            'apellido_paterno'    => 'required',
-            'apellido_materno'    => 'required',
-            'telefono_fijo' => 'required',
-            'celular'       => 'required|min:8',
-            'rut'           => 'required|cl_rut',
+            'nombre'            => 'required|max:255',
+            'email'             => 'required|email|max:255|unique:users',
+            'password'          => 'required|min:6',
+            'apellido_paterno'  => 'required',
+            'apellido_materno'  => 'required',
+            'telefono_fijo'     => 'required',
+            'celular'           => 'required|min:8',
+            'rut'               => 'required|cl_rut|unique:users,rut',
 
         ]);
 

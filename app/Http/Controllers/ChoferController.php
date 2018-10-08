@@ -36,7 +36,7 @@ class ChoferController extends Controller
         try {
             $user = AuthController::createUser($request,'chofer',$random_password);
         } catch (ValidationException $e) {
-            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages(), 'trace' => $e->getTrace()],400);
+            return response()->json(['message'=> 'Hay errores en los campos de formulario', 'error'=> $e->validator->messages()],400);
         }
         $chofer = new Chofer();
         $chofer->id_empresa = $empresaId;

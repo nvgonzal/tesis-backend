@@ -177,7 +177,7 @@ class EmpresasController extends Controller
         $empresa = Empresa::find($id);
         $empresa->delete();
 
-        $mensaje = ['message' => 'Empresa' . $empresa->nombre . 'Borrada', 'data' => $empresa];
+        $mensaje = ['message' => 'Empresa' . $empresa->nombre . 'Borrada'];
         return response()->json($mensaje, 201);
     }
 }
