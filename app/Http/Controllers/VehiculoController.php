@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Vehiculo;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+use Validator;
 
 class VehiculoController extends Controller
 {
@@ -44,7 +45,7 @@ class VehiculoController extends Controller
         $validator = Validator::make($data,$rules);
 
         if ($validator->fails()){
-            return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
+            return response(['message'=>'Hay errores en tus entradas','error'=>$validator->messages()],400);
         }
 
         $vehiculo = new Vehiculo();
@@ -103,7 +104,7 @@ class VehiculoController extends Controller
         $validator = Validator::make($data,$rules);
 
         if ($validator->fails()){
-            return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
+            return response(['message'=>'Hay errores en tus entradas','error'=>$validator->messages()],400);
         }
 
         $vehiculo->patente_vehiculo = $request->patente_vehiculo;
@@ -130,7 +131,11 @@ class VehiculoController extends Controller
         if($user->cliente->id != $vehiculo->id_cliente) {
             return response()->json(['message' => 'No autorizado'],403);
         }
-        $vehiculo->delete();
+        try {
+            $vehiculo->delete();
+        } catch (QueryException $e) {
+            return response()->json(['message' => 'El vehiculo esta registrado en un servicio.'],400);
+        }
         return response()->json(['message'=>'Vehiculo eliminado']);
 
     }

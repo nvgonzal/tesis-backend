@@ -56,15 +56,15 @@ class AuthController extends Controller
      */
     public static function createUser(Request $request, $tipo_usuario,$random_password = null){
 
-        $keys = collect(['nombre', 'email', 'password', 'ap_paterno'
-            ,'ap_materno','telefono_fijo','rut', 'celular']);
+        $keys = collect(['nombre', 'email', 'password', 'apellido_paterno'
+            ,'apellido_materno','telefono_fijo','rut', 'celular']);
 
         $rules = collect([
             'nombre'        => 'required|max:255',
             'email'         => 'required|email|max:255|unique:users',
             'password'      => 'required|min:6',
-            'ap_paterno'    => 'required',
-            'ap_materno'    => 'required',
+            'apellido_paterno'    => 'required',
+            'apellido_materno'    => 'required',
             'telefono_fijo' => 'required',
             'celular'       => 'required|min:8',
             'rut'           => 'required|cl_rut',
@@ -85,9 +85,9 @@ class AuthController extends Controller
 
         $user = new User();
         $user->nombre           = $request->nombre;
-        $user->ap_paterno       = $request->ap_paterno;
-        $user->ap_materno       = $request->ap_materno;
-        $user->nombre_completo  = $request->nombre .' '. $request->ap_paterno .' '. $request->ap_materno;
+        $user->ap_paterno       = $request->apellido_paterno;
+        $user->ap_materno       = $request->apellido_materno;
+        $user->nombre_completo  = $request->nombre .' '. $request->apellido_paterno .' '. $request->apellido_materno;
         $user->celular          = $request->celular;
         $user->telefono_fijo    = $request->telefono_fijo;
         $user->rut              = $request->rut;

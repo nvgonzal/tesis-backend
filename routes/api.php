@@ -45,7 +45,7 @@ Route::middleware(['auth:api','cliente'])->group(function (){
     Route::get('/vehiculos', 'VehiculoController@index');
     Route::post('/vehiculos', 'VehiculoController@store');
     Route::get('/vehiculos/{id}', 'VehiculoController@show');
-    Route::put('/vehiculos/{id}', 'VehiculoController@edit');
+    Route::put('/vehiculos/{id}', 'VehiculoController@update');
     Route::delete('/vehiculos/{id}', 'VehiculoController@destroy');
 });
 

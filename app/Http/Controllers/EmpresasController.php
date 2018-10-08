@@ -40,8 +40,8 @@ class EmpresasController extends Controller
             'cuenta_pago'       => 'required|email',
             'nombre'            => 'required|max:255',
             'email'             => 'required|email|max:255|unique:users',
-            'ap_paterno'        => 'required',
-            'ap_materno'        => 'required',
+            'apellido_paterno'  => 'required',
+            'apellido_materno'  => 'required',
             'telefono_fijo'     => 'required',
             'celular'           => 'required|min:8',
             'rut'               => 'required|cl_rut',
@@ -50,7 +50,7 @@ class EmpresasController extends Controller
         $validator = Validator::make($request->toArray(),$rules);
 
         if ($validator->fails()){
-            return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
+            return response(['message'=>'Hay errores en tus entradas','error'=>$validator->messages()],400);
         }
         $client = new \GuzzleHttp\Client();
         $direccion = str_replace(' ','+',$request->direccion);
@@ -77,7 +77,7 @@ class EmpresasController extends Controller
         try {
             $usuario = AuthController::createUser($request, 'dueño', $random_pass);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Hay errores en tus entradas.','errors' => $e->validator->messages()],400);
+            return response()->json(['message' => 'Hay errores en tus entradas.','error' => $e->validator->messages()],400);
         }
 
         try {
@@ -145,7 +145,7 @@ class EmpresasController extends Controller
             $validator = Validator::make($request->toArray(),$rules);
 
             if ($validator->fails()){
-                return response(['message'=>'Hay errores en tus entradas','errors'=>$validator->messages()],400);
+                return response(['message'=>'Hay errores en tus entradas','error'=>$validator->messages()],400);
             }
             $empresa = Empresa::findOrFail($id);
             $empresa->nombre = $request->nombre_empresa;
