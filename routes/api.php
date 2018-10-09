@@ -14,6 +14,9 @@
 Route::post('/register','AuthController@register');
 Route::post('/login','AuthController@login');
 
+Route::middleware(['auth:api'])->group(function (){
+    Route::post('/changepassword','AuthController@changePassword');
+});
 
 Route::middleware(['auth:api','dueno'])->group(function (){
 

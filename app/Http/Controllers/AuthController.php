@@ -100,11 +100,32 @@ class AuthController extends Controller
         else {
             $user->password = Hash::make($request->password);
         }
-
-
         $user->save();
 
         return $user;
+    }
+
+    public function changePassword(Request $request){
+        $rules = [
+            'password'      => 'required|confirmed',
+            'new_password'  => 'required',
+        ];
+        $data = $request->only('password','new_password','password_confirmation');
+        $validator = Validator::make($data,$rules);
+
+        $user = User::find($request->user()->id);
+
+        if ($validator->fails()){
+            return response()->json(['message'=>'Hay errores en los campos del formulario','error'=>$validator->messages()],400);
+        }
+        if (Hash::check($request->password,$user->password)){
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            return response()->json(['message' => 'Contraseña cambiado con exito']);
+        }
+        else {
+            return response()->json(['message' => 'Las contraseñas no concuerdan'],400);
+        }
     }
 
 }
