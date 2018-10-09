@@ -4,7 +4,7 @@
 
 @section('contenido')
 
-    <h1>El pago ha sido aprovado</h1>
+    <h1>El pago ha sido aprobado</h1>
 
     <h2>Gracias por usar nuestro servicio</h2>
 

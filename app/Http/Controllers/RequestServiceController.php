@@ -34,7 +34,7 @@ class RequestServiceController extends Controller
         $servicio->id_empresa   = $request->id_empresa;
         $servicio->id_vehiculo  = $request->id_vehiculo;
         $servicio->ubicacion    = $request->ubicacion;
-        $servicio->destino      = $request->ubicacion;
+        $servicio->destino      = $request->destino;
         $servicio->id_cliente   = $clientID;
         $servicio->descripcion  = $request->descripcion;
 

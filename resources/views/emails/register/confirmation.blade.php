@@ -6,6 +6,6 @@
 <body>
     <p>Hola {{$user->nombre}}, gracias por registrarte.</p>
     <br>
-    <p>Ya puedes hacer hacer uso de tu cuenta. Si olvidas tu contraseña se te enviara un link de recuperacion a este correo</p>
+    <p>Ya puedes hacer hacer uso de tu cuenta.</p>
 </body>
 </html>
