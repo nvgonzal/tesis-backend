@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Empresa;
 use App\Chofer;
+use Validator;
 
 
 class GruasController extends Controller
@@ -34,17 +35,35 @@ class GruasController extends Controller
      */
     public function store(Request $request)
     {
+        $idUser = $request->user()->id;
+        $user = User::find($idUser);
 
+        $idEmpresa = $user->chofer->empresa->id;
+
+        $rules = [
+            'patente'   => 'required',
+            'tipo'      => 'required',
+            'marca'     => 'required',
+            'modelo'    => 'required',
+        ];
+
+        $data = $request->only('patente','tipo','marca','modelo');
+
+        $validator = Validator::make($data,$rules);
+
+        if ($validator->fails()) {
+            return response()->json(['message'=>'Hay errores en tus datos','error'=>$validator->messages()]);
+        }
         try{
             $grua = new Grua();
             $grua->patente = $request->patente;
             $grua->tipo = $request->tipo;
             $grua->marca = $request->marca;
             $grua->modelo = $request->modelo;
-            $grua->id_empresa = $request->id_empresa;
+            $grua->id_empresa = $idEmpresa;
             $grua->save();
 
-            $mensaje = ['message' => 'Grua' . $grua->modelo.' creada', 'data' => $grua];
+            $mensaje = ['message' => 'Grua creada'];
             return response()->json($mensaje, 201);
 
         }catch(Exception $e){
@@ -79,6 +98,25 @@ class GruasController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $idUser = $request->user()->id;
+        $user = User::find($idUser);
+
+        $idEmpresa = $user->chofer->empresa->id;
+
+        $rules = [
+            'patente'   => 'required',
+            'tipo'      => 'required',
+            'marca'     => 'required',
+            'modelo'    => 'required',
+        ];
+
+        $data = $request->only('patente','tipo','marca','modelo');
+
+        $validator = Validator::make($data,$rules);
+
+        if ($validator->fails()) {
+            return response()->json(['message'=>'Hay errores en tus datos','error'=>$validator->messages()]);
+        }
         try{
 
             $grua = Grua::findOrFail($id);
@@ -86,10 +124,10 @@ class GruasController extends Controller
             $grua->tipo = $request->tipo;
             $grua->marca = $request->marca;
             $grua->modelo = $request->modelo;
-            $grua->id_empresa = $request->id_empresa;
+            $grua->id_empresa = $idEmpresa;
             $grua->save();
 
-            $mensaje = ['message' => 'Grua ' . $grua->modelo .' editada', 'data' => $grua];
+            $mensaje = ['message' => 'Grua editada'];
             return response()->json($mensaje, 201);
 
         }catch (Exception $e){
@@ -108,7 +146,7 @@ class GruasController extends Controller
     {
         $grua = Grua::findOrFail($id);
         $grua->delete();
-        $mensaje = ['message' => 'Grua Patente' . $grua->patente . ' ha sido Eliminada', 'data' => $grua];
+        $mensaje = ['message' => 'Grua Patente ha sido Eliminada'];
         return response()->json($mensaje,201);
     }
 }

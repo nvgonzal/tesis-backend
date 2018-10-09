@@ -107,7 +107,7 @@ class PaypalPaymentsController extends Controller
         $result = $payment->execute($execution, $this->apiContext);
 
         if ($result->getState() == 'approved'){
-            $angularBack = env('APP_ANGULAR_APP').'/servicio/pagado/'.$servicio->id;
+            $angularBack = env('APP_ANGULAR_URL').'/servicio/pagado/'.$servicio->id;
             $servicio->estado = 'pagado';
             $servicio->save();
             return redirect('/pago/aprovado')->with('angularBack',$angularBack);

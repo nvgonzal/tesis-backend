@@ -45,6 +45,18 @@ class ServicioController extends Controller
         $servicios = Servicio::finalizado($empresa_id)->latest()->get();
         $lista = [];
         foreach ($servicios as $servicio) {
+            if ($servicio->evaluacion_cliente == null){
+                $evaluacion_cliente = 0;
+            }
+            else{
+                $evaluacion_cliente = $servicio->evaluacion_cliente;
+            }
+            if ($servicio->evaluacion_empresa == null){
+                $evaluacion_empresa = 0;
+            }
+            else{
+                $evaluacion_empresa = $servicio->evaluacion_empresa;
+            }
             $item = [
                 'id' => $servicio->id,
                 'id_empresa' => $servicio->id_empresa,
@@ -60,8 +72,8 @@ class ServicioController extends Controller
                 ],
                 'descripcion' => $servicio->descripcion,
                 'descripcion_chofer' => $servicio->descripcion_chofer,
-                'evaluacion_cliente' => $servicio->evaluacion_cliente,
-                'evaluacion_empresa' => $servicio->evaluacion_empresa,
+                'evaluacion_cliente' => $evaluacion_cliente,
+                'evaluacion_empresa' => $evaluacion_empresa,
                 'precio_dolar' => $servicio->precio_dolar,
                 'precio_pesos' => $servicio->precio_pesos,
                 'precio_final' => $servicio->precio_final,
